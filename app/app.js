@@ -2,7 +2,7 @@
 const express = require('express')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
-const elm = require('./router')
+const router = require('./router')
 const app = express()
 
 // 跨域设置
@@ -21,10 +21,10 @@ app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
-app.use('/', elm)
+app.use('/yun', router)
 
 app.listen('3333', function() {
-  console.log('***************************')
-  console.log(`app listening on port 3333`)
-  console.log('***************************')
+  console.log('******************************')
+  console.log(`* app listening on port 3333 *`)
+  console.log('******************************')
 })
