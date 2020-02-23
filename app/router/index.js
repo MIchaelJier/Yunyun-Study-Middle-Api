@@ -5,25 +5,9 @@ const pick = require('object.pick')
 const { queryString, formatImageUrl, formatArrayQuery } = require('../utils/transformType')
 const router = express.Router()
 
-const request = require('./request/index')
+const request = require('./request/index');
+const noHandle = require('./request/noHandle')
+router.use('/user', require('./user')); //用户 模块 （登录、注册、手机验证码、V5验证相关）
 
-router.get('/index/advList', (req, res, next) => {
-  request.get({
-    url: '/api/index/public/advList',
-    data: req.body.data,
-  }).then(({ data }) => {
-    res.json({
-      result: data,
-      code: 0,
-    })
-  }).catch(({ errmsg, name }) => {
-    res.json({
-      errmsg,
-      name,
-      code: 1,
-    })
-  })
-})
-
-
+noHandle(router,'GET','/index/advList','/api/index/public/advList')
 module.exports = router
