@@ -14,4 +14,6 @@ router.use('/index', require('./indexPage')) // 首页
 
 router.use('/search', require('./search')) // 搜索相关（热门搜索、搜索联想、搜索等）
 
+router.use('/detail', require('./detail')) // 课程详情页
+
 module.exports = router
