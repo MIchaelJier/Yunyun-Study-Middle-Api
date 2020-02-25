@@ -2,42 +2,151 @@ const express = require('express')
 const router = express.Router()
 const request = require('./request/index')
 const noHandle = require('./request/noHandle')
+const querystring = require('querystring')
+/*
+* 获取章节信息
+* GET
+* */
+router.get('/getChapterlist', (req, res, next) => {
+  const auth = req.get("Authorization")
+  let requestWithAuth = url => {
+    const requestBody = { url }
+    auth ? requestBody.headers = {"Authorization": auth} : ''
+    return request.get(requestBody)
+  }
+  //获取章节树
+  let getList = requestWithAuth(`/api/course/chapter/public/list?${querystring.stringify(req.query)}`)
+  //获取关联视频地址
+  let getUrl = (isFree,periodId) => {
+    return requestWithAuth(`/api/course/chapter/getCourseResource?${querystring.stringify(req.query)}&isFree=${isFree}&periodId=${periodId}`)
+  }
+  getList.then( ({ data }) => {
+    let promiseArr = []
+    let newData = data.data.map( obj => {
+      return {
+        title: obj.chapterName ,
+        body: obj.periodList.map( inner => {
+          promiseArr.push( getUrl(inner.isFree, inner.id) )
+          return {
+            id: inner.id,
+            type: inner.isVideo === 1 ? 0 : inner.isDoc === 1 ? 2 : 1,
+            name: inner.periodName ,
+            tip: inner.isFree === 1 ? '可试看' : ''
+          }
+        })
+      }
+    })
+    Promise.all(promiseArr).then( resp => {
+      let flag = 0
+      newData.forEach( item => {
+        item.body.forEach(inner => {
+          const innerData =  resp[flag].data.data
+          inner.src = innerData[0] ? innerData[0].url ? innerData[0].url : ''  : ''
+          flag ++
+        })
+      })
+      data.data = newData
+      res.json(
+        data
+      )
+    })
+  }).catch(({ errmsg, name }) => {
+    res.json({
+      errmsg,
+      name,
+      code: '4XX',
+    })
+  })
+})
 
+/*
+* 获取评论区信息（加载更多）
+* GET
+* */
+noHandle(router,
+  '/getCommentsMore',
+  '/api/comment/public/getComments',
+  func = data => {
+    let newData = {
+      comments: comments(data.data.commentVOIPage.records)
+    }
+    data.data = newData
+    return data
+  })
+/*
+* 获取评论区信息（第一次）
+* GET
+* */
+noHandle(router,
+  'GET',
+  '/getComments',
+  '/api/comment/public/getComments',
+  func = data => {
+      let newData = {
+        rate: {
+          allRate: data.data.rate.averageRate,
+          allNum: data.data.rate.totalNum,
+          star: data.data.rate.star.reverse()
+        },
+        comments: comments(data.data.commentVOIPage.records)
+      }
+      data.data = newData
+      return data
+  })
+const comments = data => {
+  return data.map( obj => {
+    return {
+      date : obj.gmtModified,
+      headimg : obj.userAvatarUrl,
+      nikename : obj.nickName,
+      prog : obj.periodStudy,
+      rate : obj.evaluationRank.toString(),
+      content : obj.evaluationContent,
+      reply : '',
+      replydate : ''
+    }
+  })
+}
 /*
 * 获取课程相关的优惠券
 * GET
 * */
 noHandle(router,
   'GET',
-  '/getCoursedetail',
-  '/api/course/public/detail',
+  '/getCourseCoupon',
+  '/api/course/public/getCourseCoupon',
   func = data => {
-    let newData = {}
-    newData.coupons = data.data.map( obj => {
-      let newObj = {}
-      newData.type = obj.type
-      newObj.list = obj.map( inner => {
-        let newInner = {}
-        newInner.amount = inner.reduceAmount
-        newInner.consumingThreshold = inner.achieveAmount
-        newInner.couponId = inner.id
-        newInner.targetName = inner.targetName
-        newInner.isVip = 0
-        newInner.ownerId = inner.a
-        newInner.creatorName = inner.lecturerName
-        newInner.creatorUrl = inner.a
+    let newData = {
+      coupons:  data.data.map( obj => {
+        return {
+          type : obj.type,
+          list : obj.list.map( inner => {
+            let newInner = {
+              amount : inner.reduceAmount ,
+              consumingThreshold : inner.achieveAmount ,
+              couponId : inner.id ,
+              targetName : inner.targetName ,
+              isVip : 0 ,
+              ownerId: inner.lecturerUserNo ,
+              creatorName : inner.lecturerName ,
+              creatorUrl : inner.lecturerUserNo ,
+              targetType : inner.scope ,
+              targetId : inner.targetIdArray
+            }
 
-        newInner.createTime = inner.a
-        newInner.endTime = inner.a
-
-        newInner.targetType = inner.scope
-        newInner.targetId = inner.targetIdArray
-
-        return newInner
+            if(inner.startAt !== '' && inner.endIn !== ''){
+              newInner.createTime = inner.startAt.replace(/-/g,'/').substr(0,10)
+              newInner.endTime = inner.endIn.replace(/-/g,'/').substr(0,10)
+            }else if(inner.days !== ''){
+              newInner.saveTime = inner.days
+            }
+            return newInner
+          })
+        }
       })
-      return newData
-    })
-
+    }
+    data.data = newData
+    return data
   })
 /*
 * 获取课程详情
@@ -65,14 +174,14 @@ noHandle(router,
     newData.tips = ["独家"]
     newData.learningNum = data.data.countStudy
     newData.discountTime = data.data.limitEndIn.replace(/-/g,'/')
-    newData.coupons = data.data.couponReduceAmount === '' ? [{type: 2 , content:`减￥${data.data.couponReduceAmount}`}] : []
+    newData.coupons = data.data.couponReduceAmount === '' ?   []:[{type: 0 , content:`减￥${data.data.couponReduceAmount}`}]
     newData.description = data.data.courseIntroduce.intendedFor + data.data.courseIntroduce.introduce + data.data.courseIntroduce.introduceImg
 
-    newData.teachers = {
+    newData.teachers = [{
       name: data.data.lecturer.lecturerName,
       headImg: data.data.lecturer.logoUrl,
       teacherIntro: data.data.lecturer.introduction
-    }
+    }]
     data.data = newData
     return data
   })

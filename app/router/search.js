@@ -19,17 +19,17 @@ router.post('/getSearchResult', (req, res, next) => {
       let newData = {};
       newData.searchsum = data.data.total
       newData.searchresult = data.data.records.map( obj => {
-        let newObj = {}
-        newObj.id = obj.id
-        newObj.picsrc =  obj.courseLogo
-        newObj.title =  obj.courseName
-        newObj.url = obj.id
-        newObj.star = obj.rank
-        newObj.learned = obj.countStudy
-        newObj.oprice = obj.courseOriginal
-        newObj.nprice = obj.courseDiscount
-        newObj.vipprice = ""
-        return newObj
+        return {
+          id : obj.id,
+          picsrc : obj.courseLogo,
+          title :  obj.courseName,
+          url : obj.id,
+          star : obj.rank,
+          learned : obj.countStudy,
+          oprice : obj.courseOriginal,
+          nprice : obj.courseDiscount,
+          vipprice : ""
+        }
       })
       data.data = newData
       res.json(data)

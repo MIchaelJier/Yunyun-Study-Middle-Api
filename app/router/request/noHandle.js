@@ -45,7 +45,7 @@ const noHandle = (router,method,hereUrl,toUrl,func = data => data) => {
       res.json({
         errmsg,
         name,
-        code: 1,
+        code: '4XX',
       })
     })
   }
