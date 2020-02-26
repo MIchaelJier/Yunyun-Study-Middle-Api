@@ -3,6 +3,7 @@ const router = express.Router()
 const request = require('./request/index')
 const noHandle = require('./request/noHandle')
 const querystring = require('querystring')
+const { TimeDiff } = require('../utils/transformType')
 /*
 * 获取章节信息
 * GET
@@ -120,27 +121,29 @@ noHandle(router,
       coupons:  data.data.map( obj => {
         return {
           type : obj.type,
-          list : obj.list.map( inner => {
-            let newInner = {
-              amount : inner.reduceAmount ,
-              consumingThreshold : inner.achieveAmount ,
-              couponId : inner.id ,
-              targetName : inner.targetName ,
-              isVip : 0 ,
-              ownerId: inner.lecturerUserNo ,
-              creatorName : inner.lecturerName ,
-              creatorUrl : inner.lecturerUserNo ,
-              targetType : inner.scope ,
-              targetId : inner.targetIdArray
-            }
+          list : obj.list
+            .filter( inner => TimeDiff(inner.endIn)||inner.endIn === '' )
+            .map( inner => {
+              let newInner = {
+                amount : inner.reduceAmount ,
+                consumingThreshold : inner.achieveAmount ,
+                couponId : inner.id ,
+                targetName : inner.targetName ,
+                isVip : 0 ,
+                ownerId: inner.lecturerUserNo ,
+                creatorName : inner.lecturerName ,
+                creatorUrl : inner.lecturerUserNo ,
+                targetType : parseInt(inner.scope),
+                targetId : inner.scope == 2 ? inner.targetIdArray : inner.scope == 1 ? [inner.lecturerUserNo] : []
+              }
 
-            if(inner.startAt !== '' && inner.endIn !== ''){
-              newInner.createTime = inner.startAt.replace(/-/g,'/').substr(0,10)
-              newInner.endTime = inner.endIn.replace(/-/g,'/').substr(0,10)
-            }else if(inner.days !== ''){
-              newInner.saveTime = inner.days
-            }
-            return newInner
+              if(inner.startAt !== '' && inner.endIn !== ''){
+                newInner.createTime = inner.startAt.replace(/-/g,'/').substr(0,10)
+                newInner.endTime = inner.endIn.replace(/-/g,'/').substr(0,10)
+              }else if(inner.days !== ''){
+                newInner.saveTime = inner.days
+              }
+              return newInner
           })
         }
       })
@@ -169,7 +172,7 @@ noHandle(router,
     newData.productName = data.data.courseName
     newData.oldPrice = data.data.courseOriginal
     newData.discountPrice = data.data.courseDiscount
-    newData.deadlineTime = data.data.deadlineTime
+    newData.deadlineTime = data.data.deadlineTime === '' ? 0 : data.data.deadlineTime
     newData.rate = data.data.rank
     newData.tips = ["独家"]
     newData.learningNum = data.data.countStudy

@@ -7,13 +7,21 @@ const noHandle = require('./request/noHandle')
 * GET
 * */
 noHandle(router,'GET','/getClassList','/api/course/category/public/getClassList',func = data => {
-  // data.data.forEach(obj => {
-  //   return {
-  //     id: obj.id,
-  //     titile : obj.categoryName,
-  //     picsrc :
-  //   }
-  // })
+  data.data = data.data.map(obj => {
+    return {
+      id: obj.id,
+      titile : obj.categoryName,
+      picsrc : obj.picsrc,
+      url: obj.id,
+      children: obj.secCategoryList.map( inner => {
+        return {
+          id: inner.id,
+          name: inner.categoryName
+        }
+      })
+    }
+  })
+  return data
 })
 /*
 * 获取轮播图
@@ -42,7 +50,7 @@ noHandle(router,'GET','/list','/api/course/zone/public/list',func = data => {
     newObj.content = obj.zoneCourseVOList.map(inner => {
       return {
         contentid : inner.id,
-        size : 1,
+        size : inner.size,
         picsrc : inner.courseLogo,
         name : inner.courseName,
         oprice : inner.courseOriginal,

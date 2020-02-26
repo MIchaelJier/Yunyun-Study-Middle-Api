@@ -1,8 +1,6 @@
 
 const express = require('express')
 const pick = require('object.pick')
-
-const { queryString, formatImageUrl, formatArrayQuery } = require('../utils/transformType')
 const router = express.Router()
 
 const request = require('./request/index')
@@ -15,5 +13,7 @@ router.use('/index', require('./indexPage')) // 首页
 router.use('/search', require('./search')) // 搜索相关（热门搜索、搜索联想、搜索等）
 
 router.use('/detail', require('./detail')) // 课程详情页
+
+router.use('/cart', require('./coupon&cart')) // 购物车和优惠券 模块
 
 module.exports = router

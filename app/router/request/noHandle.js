@@ -26,13 +26,14 @@ const noHandle = (router,method,hereUrl,toUrl,func = data => data) => {
     let requestData = { url }
     //区分form-data和普通POST
     if(method === 'POST'){
-      requestData.data = con === "application/x-www-form-urlencoded" ? querystring.stringify(req.body) : req.body
+        Object.keys(req.query).length > 0 ? requestData.url += `?${querystring.stringify(req.query)}` : ''
+        requestData.data = con === "application/x-www-form-urlencoded" ? querystring.stringify(req.body) : req.body
     }
     // 转发的headers
-    if(auth || con){
+    if(auth || con) {
       requestData.headers = {}
       auth ? requestData.headers['Authorization'] = auth : ''
-      con  ? requestData.headers['Content-Type']  = con  : ''
+      con ? requestData.headers['Content-Type'] = con : ''
     }
     return requestData
   },

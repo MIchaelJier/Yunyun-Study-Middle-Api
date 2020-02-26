@@ -31,3 +31,10 @@ exports.formatArrayQuery = (arr, key) => {
     return acc
   }, []).join('&')
 }
+
+exports.TimeDiff = time => {
+  let otime=new Date(Date.parse(time.replace(/-|\./g,"/"))),
+    curtime = new Date();
+  if(otime > curtime) return true
+  else return false
+}
