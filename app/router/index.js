@@ -16,4 +16,6 @@ router.use('/detail', require('./detail')) // 课程详情页
 
 router.use('/cart', require('./coupon&cart')) // 购物车和优惠券 模块
 
+router.use('/assets', require('./userAssets')) // 用户资产，我的课程、我的订单等
+
 module.exports = router
