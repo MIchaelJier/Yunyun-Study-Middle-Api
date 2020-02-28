@@ -6,6 +6,11 @@ const querystring = require('querystring')
 const { TimeDiff } = require('../utils/transformType')
 
 /*
+* 更新课时最后学习时间
+* POST
+* */
+noHandle(router,'POST','/updateLearnTime','/api/course/updatePeriodLastLearnTime')
+/*
 * 加入免费课程
 * POST
 * */

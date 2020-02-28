@@ -3,6 +3,11 @@ const router = express.Router()
 const request = require('./request/index')
 const noHandle = require('./request/noHandle')
 /*
+* 判断 token 是否有效
+* GET
+* */
+noHandle(router,'GET','/checkToken','/oauth/check_token')
+/*
 * 获取V5HOST和TOKEN信息
 * GET
 * */
