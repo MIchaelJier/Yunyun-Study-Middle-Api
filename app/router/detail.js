@@ -9,7 +9,35 @@ const { TimeDiff } = require('../utils/transformType')
 * 更新课时最后学习时间
 * POST
 * */
-noHandle(router,'POST','/updateLearnTime','/api/course/updatePeriodLastLearnTime')
+router.post('/updateLearnTime', (req, res, next) => {
+  const headers = {"Authorization":req.get("Authorization")}
+  let addStudyLog = request.post({
+    headers,
+    url:`/api/course/addStudyLog?${querystring.stringify(req.query)}`
+  })
+  let update =  request.post({
+    headers,
+    url:`/api/course/updatePeriodLastLearnTime?${querystring.stringify(req.query)}`
+  })
+  addStudyLog
+    .then( res1 => {
+      if(res1.data.status){
+        return update
+      }else{
+        return new Promise((resolve, reject) => {resolve(res1)})
+      }
+    })
+    .then( res2 => {
+      res.json(res2.data)
+    })
+    .catch(({ errmsg, name }) => {
+      res.json({
+        errmsg,
+        name,
+        code: 1,
+      })
+    })
+})
 /*
 * 加入免费课程
 * POST
@@ -36,6 +64,7 @@ router.get('/getChapterlist', (req, res, next) => {
     let promiseArr = []
     let newData = data.data.map( obj => {
       return {
+        chapterId: obj.id ,
         title: obj.chapterName ,
         body: obj.periodList.map( inner => {
           if(req.get("Authorization")){
