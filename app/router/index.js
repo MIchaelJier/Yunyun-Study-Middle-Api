@@ -18,4 +18,6 @@ router.use('/cart', require('./coupon&cart')) // 购物车和优惠券 模块
 
 router.use('/assets', require('./userAssets')) // 用户资产，我的课程、我的订单等
 
+router.use('/pay', require('./payment')) // 支付相关（获取订单号、支付宝支付等）
+
 module.exports = router

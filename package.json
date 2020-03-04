@@ -1,14 +1,14 @@
 {
-  "name": "learn-express",
+  "name": "re-api",
   "version": "1.0.0",
-  "description": "express demo",
+  "description": "Yunyun-Study-Middle-Api",
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon app/app.js"
   },
   "keywords": [
     "express"
   ],
-  "author": "gaojingran",
+  "author": "Michael",
   "license": "MIT",
   "dependencies": {
     "axios": "^0.18.0",
