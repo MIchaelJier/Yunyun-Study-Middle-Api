@@ -4,6 +4,7 @@ const request = require('./request/index')
 const noHandle = require('./request/noHandle')
 const querystring = require('querystring')
 
+const { timestampToTime } = require('../utils/transformType')
 /*
 * 获取 我的课程
 * GET
@@ -16,6 +17,38 @@ noHandle(router,'POST','/getMyCourses','/api/course/getMyCourses',func = data =>
       name: obj.courseName,
       overProgress: obj.periodStudy,
       all: obj.periodTotal
+    }
+  })
+  data.data = newData
+  return data
+})
+/*
+* 获取 我的订单
+* GET
+* */
+noHandle(router,'GET','/getOrder','/api/order/getOrder',func = data => {
+  let newData = data.data.map( obj => {
+
+    let list = [];
+    obj.paidList.forEach( inner1 => {
+      inner1.courseList.forEach( inner2 => {
+        list.push({
+          courseName: inner2.courseName ,
+          deadlineTime: inner2.deadlineTime === '' ? 0 : inner2.deadlineTime ,
+          nprice: inner2.courseDiscount ,
+          oprice: inner2.courseOriginal ,
+          productId: inner2.id ,
+          photoUrl: inner2.courseLogo
+        })
+      })
+    })
+
+    return {
+      orderId: obj.orderNo ,
+      orderType: obj.orderStatus - 1 ,
+      actuallyPaid: obj.pricePaid === '' ? '未支付' : obj.pricePaid ,
+      tradeTime: timestampToTime(obj.gmtCreate),
+      paidList: list
     }
   })
   data.data = newData
