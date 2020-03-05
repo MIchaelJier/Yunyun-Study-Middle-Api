@@ -27,7 +27,9 @@ noHandle(router,'POST','/getMyCourses','/api/course/getMyCourses',func = data =>
 * GET
 * */
 noHandle(router,'GET','/getOrder','/api/order/getOrder',func = data => {
-  let newData = data.data.map( obj => {
+  let newData = data.data
+    .sort((a,b) => (b.gmtCreate - a.gmtCreate))
+    .map( obj => {
 
     let list = [];
     obj.paidList.forEach( inner1 => {

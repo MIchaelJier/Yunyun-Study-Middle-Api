@@ -4,9 +4,13 @@ const request = require('./request/index')
 const noHandle = require('./request/noHandle')
 const querystring = require('querystring')
 const { TimeDiff } = require('../utils/transformType')
-
 /*
-* 更新课时最后学习时间
+* 更新课时最后学习时间 已学习过
+* POST
+* */
+noHandle(router,'POST','/updateAlreadyLearnTime','/api/course/updatePeriodLastLearnTime')
+/*
+* 更新课时最后学习时间 没有学习过
 * POST
 * */
 router.post('/updateLearnTime', (req, res, next) => {
@@ -75,6 +79,7 @@ router.get('/getChapterlist', (req, res, next) => {
             type: inner.isVideo === 1 ? 0 : inner.isDoc === 1 ? 2 : 1,
             name: inner.periodName ,
             tip: inner.isFree === 1 ? '可试看' : '',
+            isStudy: inner.isStudy ,
             src: ''
           }
         })
