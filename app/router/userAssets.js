@@ -23,6 +23,16 @@ noHandle(router,'POST','/getMyCourses','/api/course/getMyCourses',func = data =>
   return data
 })
 /*
+* 取消订单
+* POST
+* */
+noHandle(router,'POST','/cancelOrder','/api/order/cancelOrder')
+/*
+* 删除订单
+* POST
+* */
+noHandle(router,'POST','/removeOrder','/api/order/removeOrder')
+/*
 * 获取 我的订单
 * GET
 * */
@@ -50,7 +60,8 @@ noHandle(router,'GET','/getOrder','/api/order/getOrder',func = data => {
       orderType: obj.orderStatus - 1 ,
       actuallyPaid: obj.pricePaid === '' ? '未支付' : obj.pricePaid ,
       tradeTime: timestampToTime(obj.gmtCreate),
-      paidList: list
+      paidList: list ,
+      payType: obj.payType
     }
   })
   data.data = newData

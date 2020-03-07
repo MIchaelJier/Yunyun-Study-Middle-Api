@@ -25,6 +25,7 @@ router.post('/getSearchResult', (req, res, next) => {
           title :  obj.courseName,
           url : obj.id,
           star : obj.rank,
+          chapterNum: obj.periodTotal,
           learned : obj.countStudy,
           oprice : obj.courseOriginal,
           nprice : obj.courseDiscount,

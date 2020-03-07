@@ -16,7 +16,7 @@ noHandle(router,'GET','/getCoupon','/api/coupon/getUserCoupon',func = data => {
       consumingThreshold: obj.couponDTO.achieveAmount === '0.00' ? 0 :  obj.couponDTO.achieveAmount,
       couponId: obj.couponDTO.id,
       creatorName: obj.couponDTO.lecturerName,
-      creatorUrl: obj.couponDTO.lecturerUserNo,
+      creatorUrl: obj.couponDTO.scope == 1 ? obj.couponDTO.lecturerUserNo : obj.couponDTO.targetIdArray[0],
       createTime: obj.startIn.substr(0,16),
       endTime: obj.endIn.substr(0,16),
       isVip: 0,
