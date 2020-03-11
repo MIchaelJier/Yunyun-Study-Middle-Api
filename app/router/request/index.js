@@ -1,4 +1,4 @@
-const { baseUrl }  = require('../api')
+const { baseUrl, mockUrl }  = require('../api')
 const axios = require('axios')
 const request = new Request()
 
@@ -9,7 +9,7 @@ function Request(params){
         axios({
           ...params,
           method:'GET',
-          url:baseUrl + params.url
+          url:params.url.includes("mock") ? mockUrl + params.url.substr(4) : baseUrl + params.url
         })
       )
     }
@@ -19,7 +19,7 @@ function Request(params){
        axios({
          ...params,
          method:'POST',
-         url:baseUrl + params.url
+         url:params.url.includes("mock") ? mockUrl + params.url.substr(4) : baseUrl + params.url
        })
      )
    }

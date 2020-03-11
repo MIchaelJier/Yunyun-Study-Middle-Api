@@ -32,7 +32,11 @@ noHandle(router,'POST','/register','/custom/register')
 * POST
 * */
 noHandle(router,'POST','/setUserProfile','/api/user/setUserProfile')
-
+/*
+* 微信小程序登录
+* POST
+* */
+noHandle(router,'POST','/wxLogin','mock/login')
 /*
 * 登录
 * POST

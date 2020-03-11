@@ -5,6 +5,16 @@ const noHandle = require('./request/noHandle')
 const querystring = require('querystring')
 
 /*
+* 热门搜索
+* GET
+* */
+noHandle(router,'GET','/getHotSearch','mock/getHotSearch')
+/*
+* 搜索联想
+* GET
+* */
+noHandle(router,'GET','/getSearchAss','mock/getHotSearch')
+/*
 * 获取搜索结果
 * POST
 * */
