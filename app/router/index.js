@@ -20,4 +20,6 @@ router.use('/assets', require('./userAssets')) // 用户资产，我的课程、
 
 router.use('/pay', require('./payment')) // 支付相关（获取订单号、支付宝支付等）
 
+router.use('/provider', require('./provider')) // 讲师页
+
 module.exports = router

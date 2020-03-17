@@ -5,22 +5,6 @@ const noHandle = require('./request/noHandle')
 const querystring = require('querystring')
 const { TimeDiff } = require('../utils/transformType')
 /*
-* 讲师课程推荐
-* GET
-* */
-noHandle(router,'GET','/getGoodCourseList','mock/getGoodCourseList')
-/*
-* 讲师 轮播图
-* GET
-* */
-noHandle(router,'GET','/getProviderSwiperList','mock/getProviderSwiperList')
-/*
-* 讲师 信息
-* GET
-* */
-noHandle(router,'GET','/getproviderInfo','mock/getproviderInfo')
-
-/*
 * 更新课时最后学习时间 已学习过
 * POST
 * */
