@@ -55,8 +55,9 @@ noHandle(router,'GET','/list','/api/course/zone/public/list',func = data => {
         name : inner.courseName,
         oprice : inner.courseOriginal,
         nprice : inner.courseDiscount,
-        learned : inner.countStudy || 0,
-        star : inner.rank
+        chapterNum :  inner.size === 2 ? (inner.countStudy || 0) : false,
+        learned : inner.size === 2 ? (inner.countStudy || 0) : false,
+        star : inner.size === 2 ? inner.rank : false
       }
     })
     return newObj

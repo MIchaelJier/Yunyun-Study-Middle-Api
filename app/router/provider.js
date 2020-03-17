@@ -22,7 +22,8 @@ noHandle(router,'GET','/getGoodCourseList','/api/course/zone/public/list',func =
         picsrc : inner.courseLogo,
         name : inner.courseName,
         oprice : inner.courseOriginal,
-        nprice : inner.courseDiscount
+        nprice : inner.courseDiscount,
+        chapterNum :  inner.countStudy || 0
       }
     })
     return newObj
