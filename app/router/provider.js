@@ -23,7 +23,7 @@ noHandle(router,'GET','/getGoodCourseList','/api/course/zone/public/list',func =
         name : inner.courseName,
         oprice : inner.courseOriginal,
         nprice : inner.courseDiscount,
-        chapterNum :  inner.countStudy || 0
+        chapterNum :  '1+'
       }
     })
     return newObj

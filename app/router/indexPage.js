@@ -3,6 +3,11 @@ const router = express.Router()
 const request = require('./request/index')
 const noHandle = require('./request/noHandle')
 /*
+* 获取app下载地址
+* GET
+* */
+noHandle(router,'GET','/getAppDownloadUrl','mock/appDownload')
+/*
 * 获取分类
 * GET
 * */
@@ -55,9 +60,9 @@ noHandle(router,'GET','/list','/api/course/zone/public/list',func = data => {
         name : inner.courseName,
         oprice : inner.courseOriginal,
         nprice : inner.courseDiscount,
-        chapterNum :  inner.size === 2 ? (inner.countStudy || 0) : false,
-        learned : inner.size === 2 ? (inner.countStudy || 0) : false,
-        star : inner.size === 2 ? inner.rank : false
+        chapterNum :  inner.size === 2 ? '1+' : null,
+        learned : inner.size === 2 ? (inner.countStudy || 0) : null,
+        star : inner.size === 2 ? inner.rank : null
       }
     })
     return newObj
