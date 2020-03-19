@@ -23,7 +23,8 @@ noHandle(router,'GET','/getGoodCourseList','/api/course/zone/public/list',func =
         name : inner.courseName,
         oprice : inner.courseOriginal,
         nprice : inner.courseDiscount,
-        chapterNum :  '1+'
+        chapterNum :  '1+',
+        isShowInapp: inner.isShowInapp
       }
     })
     return newObj
@@ -35,14 +36,17 @@ noHandle(router,'GET','/getGoodCourseList','/api/course/zone/public/list',func =
 * GET
 * */
 noHandle(router,'GET','/getProviderSwiperList','/api/course/zone/public/list',func = data => {
-  let newData = [];
+  let newData = [] ,
+      key = 0
   data.data.forEach( obj => {
     obj.zoneCourseVOList.forEach(inner => {
       if(newData.length < 5){
         newData.push({
-          id : inner.id,
+          id : key,
+          courseId : inner.id,
           picsrc : inner.courseLogo
         })
+        key ++
       }
     })
   })

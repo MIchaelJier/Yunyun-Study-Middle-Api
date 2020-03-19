@@ -60,6 +60,7 @@ noHandle(router,'GET','/list','/api/course/zone/public/list',func = data => {
         name : inner.courseName,
         oprice : inner.courseOriginal,
         nprice : inner.courseDiscount,
+        isShowInapp: inner.isShowInapp,
         chapterNum :  inner.size === 2 ? '1+' : null,
         learned : inner.size === 2 ? (inner.countStudy || 0) : null,
         star : inner.size === 2 ? inner.rank : null
